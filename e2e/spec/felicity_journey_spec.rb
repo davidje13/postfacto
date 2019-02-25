@@ -50,7 +50,7 @@ context 'Felicity', type: :feature, js: true, if: ENV['USE_MOCK_GOOGLE'] == 'tru
       end
 
       specify 'they can register and create a retro' do
-        page.driver.execute_script("window.mock_google_auth = 'expected-valid-access-token_my-email';")
+        fill_in 'mock-access-token', with: 'expected-valid-access-token_my-email'
         find('.top-start-retro').click()
 
         expect(page).to have_field('Email', with: 'my-email@example.com', disabled: true)
@@ -70,8 +70,7 @@ context 'Felicity', type: :feature, js: true, if: ENV['USE_MOCK_GOOGLE'] == 'tru
         logout
 
         visit_home_page
-        page.driver.execute_script("window.mock_google_auth = 'expected-valid-access-token_my-email';")
-
+        fill_in 'mock-access-token', with: 'expected-valid-access-token_my-email'
         find('.top-start-retro').click()
 
         expect(page).to have_content('Time to make your team retro!')

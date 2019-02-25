@@ -1182,24 +1182,4 @@ describe('ApiDispatcher', () => {
       expect(localStorage.getItem('authToken')).toEqual('the-token');
     });
   });
-
-  describe('retrieveConfig', () => {
-    beforeEach(() => {
-      subject.$store = new Cursor({}, cursorSpy);
-      subject.dispatch({type: 'retrieveConfig', data: undefined});
-    });
-
-    it('makes an api GET to /config', () => {
-      expect(MockFetch).toHaveRequested('/config', {
-        method: 'GET',
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json',
-        },
-      });
-      const request = MockFetch.latestRequest();
-      request.ok();
-      Promise.runAll();
-    });
-  });
 });

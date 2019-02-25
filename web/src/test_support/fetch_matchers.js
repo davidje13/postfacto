@@ -32,10 +32,11 @@
 import deepEqual from 'fast-deep-equal';
 
 function urlMatches(url, pattern) {
-  if (pattern.indexOf('://') !== -1) {
+  const protocolPos = url.indexOf('://');
+  if (pattern.indexOf('://') !== -1 || protocolPos === -1) {
     return url === pattern;
   }
-  const path = url.substr(url.indexOf('/', url.indexOf('://') + 3));
+  const path = url.substr(url.indexOf('/', protocolPos + 3));
   return path === pattern;
 }
 

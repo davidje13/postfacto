@@ -117,8 +117,7 @@ module SpecHelpers
   def register(email)
     logout
     visit_home_page
-    page.driver.execute_script("window.mock_google_auth = 'expected-valid-access-token_#{email}';")
-
+    fill_in 'mock-access-token', with: "expected-valid-access-token_#{email}"
     find('.top-start-retro').click()
 
     fill_in 'Full Name', with: 'my edited full name'
@@ -133,8 +132,7 @@ module SpecHelpers
   def login(email)
     logout
     visit_home_page
-    page.driver.execute_script("window.mock_google_auth = 'expected-valid-access-token_#{email}';")
-
+    fill_in 'mock-access-token', with: "expected-valid-access-token_#{email}"
     find('.top-start-retro').click()
 
     expect(page).to have_content('My Retros')

@@ -46,10 +46,11 @@ export default class LoginForm extends React.PureComponent {
   };
 
   onMockLogin = (event) => {
-    event.stopPropagation();
+    event.preventDefault();
 
     const {onSuccess} = this.props;
-    const accessToken = window.mock_google_auth; // this global is mutated during E2E tests
+
+    const accessToken = event.target['mock-access-token'].value;
 
     const mockedEmail = accessToken.split('_')[1];
     onSuccess({
@@ -64,25 +65,45 @@ export default class LoginForm extends React.PureComponent {
   render() {
     const {config, onSuccess, onFailure, className} = this.props;
 
-    if (!config.google_oauth_client_id && !config.mock_google_auth) {
-      return null;
+    const defaultToken = 'expected-valid-access-token_manual-testing';
+    const buttonClass = `button start-retro ${className}`;
+
+    if (config.google_oauth_client_id) {
+      return (
+        <div>
+          <GoogleLogin
+            clientId={config.google_oauth_client_id}
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            className={buttonClass}
+            hostedDomain={config.google_oauth_hosted_domain}
+          >
+            <span>
+              <i className="fa fa-google" aria-hidden="true" style={{marginRight: '10px'}}/>
+              Sign in with Google
+            </span>
+          </GoogleLogin>
+        </div>
+      );
     }
 
-    return (
-      <div onClickCapture={config.mock_google_auth ? this.onMockLogin : null}>
-        <GoogleLogin
-          clientId={config.google_oauth_client_id}
-          onSuccess={onSuccess}
-          onFailure={onFailure}
-          className={'button start-retro ' + className}
-          hostedDomain={config.google_oauth_hosted_domain}
-        >
-          <span>
-            <i className="fa fa-google" aria-hidden="true" style={{marginRight: '10px'}}/>
-            Sign in with Google
-          </span>
-        </GoogleLogin>
-      </div>
-    );
+    if (config.mock_google_auth) {
+      return (
+        <form onSubmit={this.onMockLogin}>
+          <input
+            name="mock-access-token"
+            id="mock-access-token"
+            type="text"
+            defaultValue={defaultToken}
+            placeholder="Access Token"
+            className="mock-access-token"
+            style={{width: '500px', maxWidth: '90%', display: 'inline-block', margin: '10px'}}
+          />
+          <input type="submit" className={buttonClass} value="Mock Login"/>
+        </form>
+      );
+    }
+
+    return null;
   }
 }

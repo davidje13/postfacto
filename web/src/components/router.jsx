@@ -53,7 +53,7 @@ export class Router extends React.Component {
   static propTypes = {
     router: types.object.isRequired,
     retro: types.object,
-    config: types.object,
+    config: types.object.isRequired,
     alert: types.object,
     featureFlags: types.object,
     api_server_not_found: types.bool,
@@ -63,7 +63,6 @@ export class Router extends React.Component {
 
   static defaultProps = {
     retro: null,
-    config: null,
     alert: null,
     featureFlags: {},
     api_server_not_found: false,
@@ -100,11 +99,9 @@ export class Router extends React.Component {
     const {api_server_not_found, retro_not_found, not_found} = nextProps;
     if (api_server_not_found) {
       this.setPage(ApiServerNotFoundPage);
-    }
-    if (retro_not_found) {
+    } else if (retro_not_found) {
       this.setPage(RetroNotFoundPage);
-    }
-    if (not_found) {
+    } else if (not_found) {
       this.setPage(NotFoundPage);
     }
   }

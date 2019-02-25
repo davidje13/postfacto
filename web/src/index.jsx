@@ -34,23 +34,38 @@ import ReactDOM from 'react-dom';
 import './stylesheets/application.scss';
 import EnhancedApplication from './Application';
 
+// Fetch config from config.js
 const {config} = global.Retro;
+delete global.Retro;
 
 if (process.env.REACT_APP_USE_MOCK_GOOGLE === 'true') {
   // Mock Google auth (mock-google-server)
-  config.mock_google_auth = true;
-  config.google_oauth_client_id = null;
-  window.mock_google_auth = 'expected-valid-access-token_manual-testing';
+  config.auth = {
+    mock: true,
+    googleOauthClientId: null,
+    googleOauthHostedDomain: null,
+  };
 } else if (process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID) {
   // Real Google auth
-  config.mock_google_auth = false;
-  config.google_oauth_client_id = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
+  config.auth = {
+    mock: false,
+    googleOauthClientId: process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID,
+    googleOauthHostedDomain: process.env.REACT_APP_GOOGLE_OAUTH_HOSTED_DOMAIN,
+  };
 } else if (config.google_oauth_client_id === undefined) {
   // No login (must create retros via admin interface)
-  config.mock_google_auth = false;
-  config.google_oauth_client_id = null;
+  config.auth = {
+    mock: false,
+    googleOauthClientId: null,
+    googleOauthHostedDomain: null,
+  };
+} else {
+  // Propagate settings from manual config file
+  config.auth = {
+    mock: false,
+    googleOauthClientId: config.google_oauth_client_id,
+    googleOauthHostedDomain: config.google_oauth_hosted_domain,
+  };
 }
 
-window.Retro = {config};
-
-ReactDOM.render(<EnhancedApplication {...{config}}/>, document.getElementById('root'));
+ReactDOM.render(<EnhancedApplication config={config}/>, document.getElementById('root'));

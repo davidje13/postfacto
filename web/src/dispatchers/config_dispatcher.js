@@ -28,23 +28,32 @@
  *
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import Mixpanel from 'mixpanel-browser';
 
-const POSTFACTO_TEAM_ANALYTICS_TOKEN = 'd4de349453cc697734eced9ebedcdb22';
+import RetroApi from '../api/retro_api';
 
-export default class Analytics {
-  static initialized = false;
+export default {
+  setConfig({data: {config}}) {
+    this.$store.merge({config});
 
-  static track(event, options = {}) {
-    if (global.Retro.config.enable_analytics) {
-      if (!Analytics.initialized) {
-        Mixpanel.init(POSTFACTO_TEAM_ANALYTICS_TOKEN);
-        Analytics.initialized = true;
+    const api = new RetroApi(config.api_base_url);
+
+    return api.retrieveConfig().then(([status, data]) => {
+      if (status >= 200 && status < 400) {
+        this.dispatch({
+          type: 'setServerConfig',
+          data: {
+            archive_emails: data.archive_emails,
+          },
+        });
+      } else if (status === 404) {
+        this.dispatch({type: 'notFound'});
       }
+    });
+  },
 
-      Mixpanel.track(event, Object.assign({
-        timestamp: (new Date()).toJSON(),
-      }, options));
-    }
-  }
-}
+  setServerConfig({data}) {
+    this.$store.refine('featureFlags').merge({
+      archiveEmails: data.archive_emails,
+    });
+  },
+};

@@ -6,17 +6,12 @@ import EnhancedApplication from './Application';
 
 describe('Application', () => {
   it('renders without crashing', () => {
-    const api_base_url = 'https://example.com';
-    const websocket_url = 'ws://websocket/url';
-    const enable_analytics = false;
-
-    global.Retro = {config: {api_base_url, enable_analytics}};
-
     const config = {
       title: 'Retro',
-      api_base_url,
-      websocket_url,
-      enable_analytics,
+      api_base_url: 'https://example.com',
+      websocket_url: 'ws://websocket/url',
+      enable_analytics: false,
+      auth: {},
       contact: '',
       terms: '',
       privacy: '',

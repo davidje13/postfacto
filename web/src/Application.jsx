@@ -46,6 +46,7 @@ import apiDispatcher from './dispatchers/api_dispatcher';
 import mainDispatcher from './dispatchers/main_dispatcher';
 import analyticsDispatcher from './dispatchers/analytics_dispatcher';
 import environmentDispatcher from './dispatchers/environment_dispatcher';
+import configDispatcher from './dispatchers/config_dispatcher';
 
 const muiTheme = getMuiTheme({
   fontFamily: 'Karla',
@@ -59,7 +60,7 @@ class Application extends React.Component {
 
   componentDidMount() {
     Logger.info('Application started');
-    Actions.retrieveConfig();
+    Actions.setConfig({config: this.props.config});
 
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
@@ -75,13 +76,13 @@ class Application extends React.Component {
 
   render() {
     const {config, store} = this.props;
-    const {websocket_url} = config;
+    const {retro} = store;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className="retro-application">
-          <Header config={config} retro={store.retro}/>
+          <Header config={config} retro={retro}/>
           <EnhancedRouter config={config} {...store}/>
-          <SessionWebsocket url={websocket_url}/>
+          <SessionWebsocket url={config.websocket_url}/>
         </div>
       </MuiThemeProvider>
     );
@@ -98,6 +99,7 @@ export default useStore(
       apiDispatcher,
       analyticsDispatcher,
       environmentDispatcher,
+      configDispatcher,
     ],
     onDispatch: (event) => {
       /* eslint-disable no-console */

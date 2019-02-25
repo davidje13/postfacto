@@ -39,7 +39,9 @@ import HomeLegalBanner from './home_legal_banner';
 
 export default class HomePage extends React.PureComponent {
   static propTypes = {
-    config: types.object.isRequired,
+    config: types.shape({
+      auth: types.object,
+    }).isRequired,
   };
 
   componentDidMount() {
@@ -62,6 +64,7 @@ export default class HomePage extends React.PureComponent {
   render() {
     const {config} = this.props;
 
+    /* eslint-disable react/jsx-no-target-blank */ // Allow sending Referer header to retro blog post
     return (
       <div className="home-page">
         <div className="sticky-header">
@@ -92,7 +95,7 @@ export default class HomePage extends React.PureComponent {
                 onSuccess={this.onSignIn}
                 onFailure={this.onGoogleLoginFailure}
                 className="top-start-retro"
-                config={config}
+                auth={config.auth}
               />
             </div>
           </div>
@@ -106,5 +109,6 @@ export default class HomePage extends React.PureComponent {
         <RetroFooter config={config}/>
       </div>
     );
+    /* eslint-enable react/jsx-no-target-blank */
   }
 }

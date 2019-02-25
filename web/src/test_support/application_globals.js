@@ -31,13 +31,11 @@
 
 import {Dispatcher} from 'p-flux';
 import jestSpyOnAugmented from './jest_spy_augmented';
-import Application from '../Application'; // Load dispatchers (sets global state in p-flux Actions)
+import Application from '../Application';
 
 jest.useFakeTimers();
 
 beforeEach(() => {
-  global.Retro = {config: {api_base_url: 'https://example.com', enable_analytics: false}};
-
   Application.reset(); // set global state such as p-flux.Actions
 
   jestSpyOnAugmented(Dispatcher, 'dispatch').mockReturnValue(null);

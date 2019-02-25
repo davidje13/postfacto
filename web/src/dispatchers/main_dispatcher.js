@@ -292,11 +292,6 @@ export default {
   redirectToRegistration({data}) {
     this.dispatch({type: 'setRoute', data: `/registration/${data.access_token}/${data.email}/${data.name}`});
   },
-  setConfig({data}) {
-    this.$store.refine('featureFlags').merge({
-      archiveEmails: data.archive_emails,
-    });
-  },
   setCountryCode({data}) {
     this.$store.merge({
       countryCode: data.countryCode,

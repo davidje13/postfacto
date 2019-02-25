@@ -123,7 +123,9 @@ export default class LoginToRetroPage extends React.Component {
           <div className="small-centered medium-8 small-10 columns">
             <div className="field row">
               <h1>{this.pageTitle()}</h1>
-              <label className="label">Enter the password to access {name}.</label>
+              <label className="label">
+                Enter the password to access {name}.
+              </label>
               <input
                 className={`form-input ${inputStyle}`}
                 placeholder="Password"
@@ -138,8 +140,8 @@ export default class LoginToRetroPage extends React.Component {
               />
               <p className="password-terms-text">
                 By logging in, you agree to our
-                {' '}<a href={config.terms} target="_blank">Terms of Use</a> and
-                {' '}<a href={config.privacy} target="_blank">Privacy Policy</a> and
+                {' '}<a href={config.terms} target="_blank" rel="noopener noreferrer">Terms of Use</a> and
+                {' '}<a href={config.privacy} target="_blank" rel="noopener noreferrer">Privacy Policy</a> and
                 use of cookies.
               </p>
               <div className="error-message">{errors}</div>

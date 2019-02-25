@@ -199,8 +199,9 @@ export default class ShowRetroPage extends React.Component {
   }
 
   renderArchiveConfirmationDialog() {
-    const title = this.props.dialog ? this.props.dialog.title : '';
-    const message = this.props.dialog ? this.props.dialog.message : '';
+    const {dialog, retro, featureFlags} = this.props;
+    const title = dialog ? dialog.title : '';
+    const message = dialog ? dialog.message : '';
     const toggle = DEFAULT_TOGGLE_STYLE;
 
     const archiveButton = (
@@ -209,7 +210,7 @@ export default class ShowRetroPage extends React.Component {
         type="button"
         onClick={this.handleArchiveRetroConfirmation}
       >
-        {this.props.retro.send_archive_email && this.props.featureFlags.archiveEmails ? 'Archive & send email' : 'Archive'}
+        {retro.send_archive_email && featureFlags.archiveEmails ? 'Archive & send email' : 'Archive'}
       </button>
     );
 
@@ -227,22 +228,22 @@ export default class ShowRetroPage extends React.Component {
       <Dialog
         title={title}
         actions={[cancelButton, archiveButton]}
-        open={!!this.props.dialog}
+        open={Boolean(dialog)}
         onRequestClose={Actions.hideDialog}
         actionsContainerClassName="archive-dialog__actions"
         contentClassName="archive-dialog"
       >
         <p>{message}</p>
         {
-          this.props.featureFlags.archiveEmails ? (
+          featureFlags.archiveEmails ? (
             <div>
               <label className="label" htmlFor="send_archive_email">Send action items to the team via email?</label>
 
               <Toggle
                 id="send_archive_email"
                 name="sendArchiveEmail"
-                label={this.props.retro.send_archive_email ? 'Yes' : 'No'}
-                toggled={this.props.retro.send_archive_email}
+                label={retro.send_archive_email ? 'Yes' : 'No'}
+                toggled={retro.send_archive_email}
                 labelPosition="right"
                 onToggle={this.handleArchiveEmailPreferenceChange}
                 trackStyle={toggle.trackStyle}

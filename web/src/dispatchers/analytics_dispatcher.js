@@ -29,34 +29,54 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Analytics from '../helpers/analytics';
+import Mixpanel from 'mixpanel-browser';
+
+const POSTFACTO_TEAM_ANALYTICS_TOKEN = 'd4de349453cc697734eced9ebedcdb22';
+
+let analyticsInitialized = false;
+
+function track($store, event, options = {}) {
+  const {enable_analytics} = $store.get('config');
+  if (!enable_analytics) {
+    return;
+  }
+
+  if (!analyticsInitialized) {
+    Mixpanel.init(POSTFACTO_TEAM_ANALYTICS_TOKEN);
+    analyticsInitialized = true;
+  }
+
+  Mixpanel.track(event, Object.assign({
+    timestamp: (new Date()).toJSON(),
+  }, options));
+}
 
 export default {
   createdRetroAnalytics({data}) {
-    Analytics.track('Created Retro', {'retroId': data.retroId});
+    track(this.$store, 'Created Retro', {'retroId': data.retroId});
   },
   visitedRetroAnalytics({data}) {
-    Analytics.track('Retro visited', {'retroId': data.retroId});
+    track(this.$store, 'Retro visited', {'retroId': data.retroId});
   },
   createdRetroItemAnalytics({data}) {
-    Analytics.track('Created Retro Item', {'retroId': data.retroId, 'category': data.category});
+    track(this.$store, 'Created Retro Item', {'retroId': data.retroId, 'category': data.category});
   },
   completedRetroItemAnalytics({data}) {
-    Analytics.track('Completed Retro Item', {'retroId': data.retroId, 'category': data.category});
+    track(this.$store, 'Completed Retro Item', {'retroId': data.retroId, 'category': data.category});
   },
   createdActionItemAnalytics({data}) {
-    Analytics.track('Created Action Item', {'retroId': data.retroId});
+    track(this.$store, 'Created Action Item', {'retroId': data.retroId});
   },
   doneActionItemAnalytics({data}) {
-    Analytics.track('Done Action Item', {'retroId': data.retroId});
+    track(this.$store, 'Done Action Item', {'retroId': data.retroId});
   },
   undoneActionItemAnalytics({data}) {
-    Analytics.track('Undone Action Item', {'retroId': data.retroId});
+    track(this.$store, 'Undone Action Item', {'retroId': data.retroId});
   },
   archivedRetroAnalytics({data}) {
-    Analytics.track('Archived Retro', {'retroId': data.retroId});
+    track(this.$store, 'Archived Retro', {'retroId': data.retroId});
   },
   showHomePageAnalytics() {
-    Analytics.track('Loaded homepage');
+    track(this.$store, 'Loaded homepage');
   },
 };

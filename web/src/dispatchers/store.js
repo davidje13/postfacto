@@ -53,4 +53,9 @@ export default {
     isMobile1030: false,
     isMobile1084: false,
   },
+  config: {
+    enable_analytics: false,
+    api_base_url: '',
+    auth: {},
+  },
 };

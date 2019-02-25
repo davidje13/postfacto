@@ -33,6 +33,8 @@ import React from 'react';
 import types from 'prop-types';
 import RetroFooter from '../shared/footer';
 
+/* eslint-disable react/no-unescaped-entities, react/jsx-one-expression-per-line */
+
 const NewTermsPage = ({config}) => (
   <div id="new-terms" className="terms">
     <div className="simple-text-page">
@@ -244,3 +246,5 @@ NewTermsPage.propTypes = {
 };
 
 export default NewTermsPage;
+
+/* eslint-enable react/no-unescaped-entities, react/jsx-one-expression-per-line */
