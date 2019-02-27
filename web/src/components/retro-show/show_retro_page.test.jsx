@@ -77,9 +77,11 @@ function createRetro(isPrivate = false) {
 
 describe('ShowRetroPage', () => {
   let environment;
+  let localStorage;
 
   beforeEach(() => {
     environment = {isMobile640: false};
+    localStorage = {hasAnyData: false, apiTokens: {}, loginsNeeded: {}};
   });
 
   describe('private retro', () => {
@@ -97,6 +99,7 @@ describe('ShowRetroPage', () => {
             config={config}
             featureFlags={{archiveEmails: true}}
             environment={environment}
+            localStorage={localStorage}
           />
         </MuiThemeProvider>
       ));
@@ -116,6 +119,7 @@ describe('ShowRetroPage', () => {
             config={config}
             featureFlags={{archiveEmails: true}}
             environment={environment}
+            localStorage={localStorage}
           />
         </MuiThemeProvider>
       ));
@@ -141,6 +145,7 @@ describe('ShowRetroPage', () => {
             config={config}
             featureFlags={{archiveEmails: true}}
             environment={environment}
+            localStorage={localStorage}
           />
         </MuiThemeProvider>
       ));
@@ -186,6 +191,7 @@ describe('ShowRetroPage', () => {
             }}
             featureFlags={{archiveEmails: true}}
             environment={environment}
+            localStorage={localStorage}
           />
         </MuiThemeProvider>
       ));
@@ -215,6 +221,7 @@ describe('ShowRetroPage', () => {
           }}
           featureFlags={{archiveEmails: true}}
           environment={environment}
+          localStorage={localStorage}
         />
       ));
 
@@ -245,6 +252,7 @@ describe('ShowRetroPage', () => {
             config={config}
             featureFlags={{archiveEmails: true}}
             environment={environment}
+            localStorage={localStorage}
           />
         </MuiThemeProvider>
       ));

@@ -33,6 +33,8 @@ import Cursor from 'pui-cursor';
 import {Dispatcher} from 'p-flux';
 import '../spec_helper';
 
+import mainDispatcher from './main_dispatcher';
+
 function latestCall(spy) {
   const calls = spy.mock.calls;
   return calls[calls.length - 1];
@@ -51,7 +53,8 @@ describe('MainDispatcher', () => {
     subject = Dispatcher;
 
     // dispatch is spied on in spec_helper
-    subject.dispatch.mockCallThrough();
+    // Only allow Main Dispatcher actions to actually happen
+    subject.dispatch.mockConditionalCallThrough(({type}) => Object.keys(mainDispatcher).includes(type));
 
     // prevent console logs
     jest.spyOn(subject, 'onDispatch').mockReturnValue(null);
@@ -287,26 +290,6 @@ describe('MainDispatcher', () => {
     it('updates the error messages', () => {
       expect(cursorSpy).toHaveBeenCalledWith({
         errors: ['Sorry! That URL is already taken.'],
-      });
-    });
-  });
-
-  describe('requireRetroLogin', () => {
-    it('dispatches a set Route', () => {
-      subject.dispatch({type: 'requireRetroLogin', data: {retro_id: 1}});
-      expect(Dispatcher).toHaveReceived({
-        type: 'setRoute',
-        data: '/retros/1/login',
-      });
-    });
-  });
-
-  describe('requireRetroRelogin', () => {
-    it('dispatches a set Route', () => {
-      subject.dispatch({type: 'requireRetroRelogin', data: {retro: {slug: 'retro-slug-1'}}});
-      expect(Dispatcher).toHaveReceived({
-        type: 'setRoute',
-        data: '/retros/retro-slug-1/relogin',
       });
     });
   });
@@ -644,7 +627,7 @@ describe('MainDispatcher', () => {
 
     describe('when the command is force_relogin', () => {
       describe('when the command was originated by someone else', () => {
-        it('dispatches show alert with a password changed message', () => {
+        it('resets the API token', () => {
           subject.dispatch({
             type: 'websocketRetroDataReceived',
             data: {
@@ -652,25 +635,25 @@ describe('MainDispatcher', () => {
               payload: {
                 originator_id: 'fake-request-uuid-2',
                 retro: {
-                  slug: 'retro-slug-1',
+                  id: 1,
+                  slug: 'abc',
                 },
               },
             },
           });
 
           expect(Dispatcher).toHaveReceived({
-            type: 'requireRetroRelogin',
+            type: 'markRetroLoginNeeded',
             data: {
-              retro: {
-                slug: 'retro-slug-1',
-              },
+              slug: 'abc',
+              changed: true,
             },
           });
         });
       });
 
       describe('when the command was originated by me', () => {
-        it('does not dispatch show alert', () => {
+        it('does not reset the API token', () => {
           subject.dispatch({
             type: 'websocketRetroDataReceived',
             data: {
@@ -681,7 +664,7 @@ describe('MainDispatcher', () => {
             },
           });
 
-          expect(Dispatcher).not.toHaveReceived('requireRetroRelogin');
+          expect(Dispatcher).not.toHaveReceived('markRetroLoginNeeded');
         });
       });
     });
@@ -939,13 +922,11 @@ describe('MainDispatcher', () => {
 
   describe('signOut', () => {
     beforeEach(() => {
-      localStorage.setItem('a', 'b');
-
       subject.dispatch({type: 'signOut'});
     });
 
     it('clears local storage', () => {
-      expect(localStorage.length).toEqual(0);
+      expect(Dispatcher).toHaveReceived('clearLocalStorage');
     });
 
     it('redirects to home page', () => {
@@ -975,7 +956,7 @@ describe('MainDispatcher', () => {
     });
 
     it('updates token in local storage', () => {
-      expect(localStorage.getItem('apiToken-42')).toEqual('new-api-token');
+      expect(subject).toHaveReceived({type: 'setApiToken', data: {slug: '42', apiToken: 'new-api-token'}});
     });
   });
 

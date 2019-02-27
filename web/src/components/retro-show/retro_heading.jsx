@@ -35,14 +35,17 @@ import {Actions} from 'p-flux';
 import types from 'prop-types';
 import RetroMenu from '../shared/retro_menu';
 
-// not pure: uses window.localStorage to check login status
-export default class RetroHeading extends React.Component {
+export default class RetroHeading extends React.PureComponent {
   static propTypes = {
     retro: types.object.isRequired,
     retroId: types.string.isRequired,
     archives: types.bool.isRequired,
     isMobile: types.bool.isRequired,
     showVideoButton: types.bool,
+    localStorage: types.shape({
+      hasAnyData: types.bool.isRequired,
+      apiTokens: types.object.isRequired,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -94,17 +97,17 @@ export default class RetroHeading extends React.Component {
   }
 
   handleRetroSettings() {
-    const {retroId} = this.props;
+    const {retroId, localStorage} = this.props;
 
-    if (window.localStorage.getItem(`apiToken-${retroId}`) !== null) {
+    if (localStorage.apiTokens[String(retroId)]) {
       Actions.routeToRetroSettings({retro_id: retroId});
     } else {
-      Actions.requireRetroLogin({retro_id: retroId});
+      Actions.markRetroLoginNeeded({slug: retroId});
     }
   }
 
   getMenuItems() {
-    const {archives, retro} = this.props;
+    const {archives, retro, localStorage} = this.props;
     const items = [
       {
         title: 'Archive this retro',
@@ -125,7 +128,7 @@ export default class RetroHeading extends React.Component {
       {
         title: 'Sign out',
         callback: Actions.signOut,
-        isApplicable: window.localStorage.length > 0,
+        isApplicable: localStorage.hasAnyData,
       },
     ];
 

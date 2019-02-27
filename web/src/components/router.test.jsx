@@ -46,7 +46,7 @@ describe('Router', () => {
   beforeEach(() => {
     const fakeRouter = {get: () => {}};
 
-    rendered = shallow(<Router alert={{}} router={fakeRouter} config={{}}/>);
+    rendered = shallow(<Router alert={{}} router={fakeRouter} config={{}} localStorage={{}}/>);
   });
 
   it('renders alert', () => {

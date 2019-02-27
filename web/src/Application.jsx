@@ -46,6 +46,7 @@ import apiDispatcher from './dispatchers/api_dispatcher';
 import mainDispatcher from './dispatchers/main_dispatcher';
 import analyticsDispatcher from './dispatchers/analytics_dispatcher';
 import environmentDispatcher from './dispatchers/environment_dispatcher';
+import localStorageDispatcher from './dispatchers/local_storage_dispatcher';
 
 const muiTheme = getMuiTheme({
   fontFamily: 'Karla',
@@ -60,6 +61,7 @@ class Application extends React.Component {
   componentDidMount() {
     Logger.info('Application started');
     Actions.retrieveConfig();
+    Actions.reloadLocalStorage();
 
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
@@ -76,6 +78,13 @@ class Application extends React.Component {
   render() {
     const {config, store} = this.props;
     const {websocket_url} = config;
+
+    if (!store.hasConfig) {
+      // Do not allow any rendering until the configuration has loaded
+      // (ensures p-flux has enough time to sort itself out and the feature flags have downloaded)
+      return null;
+    }
+
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className="retro-application">
@@ -98,6 +107,7 @@ export default useStore(
       apiDispatcher,
       analyticsDispatcher,
       environmentDispatcher,
+      localStorageDispatcher,
     ],
     onDispatch: (event) => {
       /* eslint-disable no-console */

@@ -48,8 +48,13 @@ const defaultRetro = {
 
 function createShallowRetroHeading(retroOverrides = {}, propOverrides = {}) {
   const retro = Object.assign(defaultRetro, retroOverrides);
+  const localStorage = {
+    hasAnyData: false,
+    apiTokens: {},
+    loginsNeeded: {},
+  };
 
-  return shallow(<RetroHeading retro={retro} retroId="13" archives={false} isMobile={false} {...propOverrides}/>);
+  return shallow(<RetroHeading retro={retro} retroId="13" archives={false} isMobile={false} localStorage={localStorage} {...propOverrides}/>);
 }
 
 describe('RetroHeading', () => {

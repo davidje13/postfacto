@@ -102,6 +102,7 @@ describe('Show retro page archives', () => {
             config={config}
             featureFlags={{archiveEmails: true}}
             environment={{isMobile640: false}}
+            localStorage={{hasAnyData: false, apiTokens: {}, loginsNeeded: {}}}
           />
         </MuiThemeProvider>
       ));
@@ -128,8 +129,20 @@ describe('Show retro page archives', () => {
     });
 
     it('shows a menu with "Sign out" if logged in', () => {
-      window.localStorage.setItem('authToken', 'some-token');
-      dom.setProps({}); // force update
+      dom = mount((
+        <MuiThemeProvider>
+          <ShowRetroPage
+            retro_archives={retro_archives}
+            retroId="13"
+            archives
+            retro={retro_archives}
+            config={config}
+            featureFlags={{archiveEmails: true}}
+            environment={{isMobile640: false}}
+            localStorage={{hasAnyData: true, apiTokens: {}, loginsNeeded: {}}}
+          />
+        </MuiThemeProvider>
+      ));
 
       const menuLabels = getMenuLabels(dom);
       const lastMenuLabel = menuLabels[menuLabels.length - 1];
@@ -151,6 +164,7 @@ describe('Show retro page archives', () => {
             config={config}
             featureFlags={{archiveEmails: true}}
             environment={{isMobile640: true}}
+            localStorage={{hasAnyData: false, apiTokens: {}, loginsNeeded: {}}}
           />
         </MuiThemeProvider>
       ));

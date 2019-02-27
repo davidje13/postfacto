@@ -37,7 +37,12 @@ import Logger from '../../helpers/logger';
 export default class RetroCable extends React.Component {
   static propTypes = {
     cable: types.object.isRequired,
-    retro_id: types.string.isRequired,
+    retroId: types.string.isRequired,
+    apiToken: types.string,
+  };
+
+  static defaultProps = {
+    apiToken: null,
   };
 
   constructor(props) {
@@ -45,14 +50,14 @@ export default class RetroCable extends React.Component {
     this.state = {subscription: null};
   }
 
-  componentWillMount() {
-    const {cable, retro_id} = this.props;
-    this.initialize(cable, retro_id);
+  componentDidMount() {
+    const {cable, retroId, apiToken} = this.props;
+    this.initialize(cable, retroId, apiToken);
   }
 
   componentWillReceiveProps(nextProps) {
-    const {cable, retro_id} = nextProps;
-    this.initialize(cable, retro_id);
+    const {cable, retroId, apiToken} = nextProps;
+    this.initialize(cable, retroId, apiToken);
   }
 
   componentWillUnmount() {
@@ -61,11 +66,24 @@ export default class RetroCable extends React.Component {
     cable.subscriptions.remove(this.state.subscription);
   }
 
-  initialize(cable, retro_id) {
-    const {subscription} = this.state;
-    if (cable && !subscription) {
-      this.subscribe(cable, retro_id, localStorage.getItem('apiToken-' + retro_id));
+  initialize(cable, retroId, apiToken) {
+    if (!cable) {
+      return;
     }
+
+    if (this.state.subscription) {
+      return;
+    }
+
+    const subscription = cable.subscriptions.create(
+      {channel: 'RetrosChannel', retro_id: retroId, api_token: apiToken},
+      {
+        received: this.onReceived,
+        disconnected: this.onDisconnected,
+      },
+    );
+
+    this.setState({subscription});
   }
 
   onReceived(data) {
@@ -74,18 +92,6 @@ export default class RetroCable extends React.Component {
 
   onDisconnected(data) {
     Logger.info('disconnected from actioncable', data);
-  }
-
-  subscribe(cable, retro_id, api_token) {
-    const subscription = cable.subscriptions.create(
-      {channel: 'RetrosChannel', retro_id, api_token},
-      {
-        received: this.onReceived,
-        disconnected: this.onDisconnected,
-      },
-    );
-
-    this.setState({subscription});
   }
 
   render() {

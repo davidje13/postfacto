@@ -50,6 +50,9 @@ describe('ShowRetroPasswordSettingsPage', () => {
     items: [],
     action_items: [],
   };
+  const localStorage = {
+    hasAnyData: true,
+  };
 
   const session = {request_uuid: 'blah'};
 
@@ -61,7 +64,13 @@ describe('ShowRetroPasswordSettingsPage', () => {
 
       dom = mount((
         <MuiThemeProvider>
-          <ShowRetroPasswordSettingsPage retroId="13" retro={retro} session={session} environment={environment}/>
+          <ShowRetroPasswordSettingsPage
+            retroId="13"
+            retro={retro}
+            session={session}
+            environment={environment}
+            localStorage={localStorage}
+          />
         </MuiThemeProvider>
       ));
     });

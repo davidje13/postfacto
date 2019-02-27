@@ -48,14 +48,16 @@ function makeDateString(date) {
 
 const createdAtDesc = (a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-// not pure: uses window.localStorage to check login status
-export default class ListRetroArchivesPage extends React.Component {
+export default class ListRetroArchivesPage extends React.PureComponent {
   static propTypes = {
     archives: types.array,
     retroId: types.string.isRequired,
     config: types.object.isRequired,
     environment: types.shape({
       isMobile1030: types.bool,
+    }).isRequired,
+    localStorage: types.shape({
+      hasAnyData: types.bool.isRequired,
     }).isRequired,
   };
 
@@ -81,7 +83,7 @@ export default class ListRetroArchivesPage extends React.Component {
 
   getMenuItems() {
     const items = [
-      {title: 'Sign out', callback: Actions.signOut, isApplicable: window.localStorage.length > 0},
+      {title: 'Sign out', callback: Actions.signOut, isApplicable: this.props.localStorage.hasAnyData},
     ];
 
     return items.filter((item) => item.isApplicable);

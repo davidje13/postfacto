@@ -48,28 +48,37 @@ const config = {
 };
 
 describe('Retro settings', () => {
+  let retro;
+  let localStorage;
   let dom;
 
   beforeEach(() => {
-    const retro = {
+    retro = {
       id: 13,
+      slug: 'the-retro-name',
       name: 'the retro name',
       video_link: 'http://the/video/link',
       items: [],
       action_items: [],
     };
 
-    window.localStorage.setItem('authToken', 'some-token');
+    localStorage = {
+      hasAnyData: true,
+      apiTokens: {},
+      loginsNeeded: {},
+      authToken: 'some-token',
+    };
 
     dom = mount((
       <MuiThemeProvider>
         <ShowRetroPage
           retro={retro}
-          retroId="13"
+          retroId="the-retro-name"
           archives={false}
           config={config}
           featureFlags={{archiveEmails: true}}
           environment={{isMobile640: false}}
+          localStorage={localStorage}
         />
       </MuiThemeProvider>
     ));
@@ -77,22 +86,52 @@ describe('Retro settings', () => {
 
   describe('retro settings menu item', () => {
     it('redirects to retro settings page if logged in', () => {
-      window.localStorage.setItem('apiToken-13', 'some-token');
+      localStorage.apiTokens = {'the-retro-name': 'some-token'};
+
+      dom = mount((
+        <MuiThemeProvider>
+          <ShowRetroPage
+            retro={retro}
+            retroId="the-retro-name"
+            archives={false}
+            config={config}
+            featureFlags={{archiveEmails: true}}
+            environment={{isMobile640: false}}
+            localStorage={localStorage}
+          />
+        </MuiThemeProvider>
+      ));
 
       invokeMenuOption(dom, 'Retro settings');
 
       expect(Dispatcher).toHaveReceived({
         type: 'routeToRetroSettings',
-        data: {retro_id: '13'},
+        data: {retro_id: 'the-retro-name'},
       });
     });
 
     it('redirects to retro login page if not logged in', () => {
+      localStorage.apiTokens = {};
+
+      dom = mount((
+        <MuiThemeProvider>
+          <ShowRetroPage
+            retro={retro}
+            retroId="the-retro-name"
+            archives={false}
+            config={config}
+            featureFlags={{archiveEmails: true}}
+            environment={{isMobile640: false}}
+            localStorage={localStorage}
+          />
+        </MuiThemeProvider>
+      ));
+
       invokeMenuOption(dom, 'Retro settings');
 
       expect(Dispatcher).toHaveReceived({
-        type: 'requireRetroLogin',
-        data: {retro_id: '13'},
+        type: 'markRetroLoginNeeded',
+        data: {slug: 'the-retro-name'},
       });
     });
   });

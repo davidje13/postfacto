@@ -37,7 +37,12 @@ import RetroCable from './retro_cable';
 export default class RetroWebsocket extends React.Component {
   static propTypes = {
     url: types.string.isRequired,
-    retro_id: types.string.isRequired,
+    retroId: types.string.isRequired,
+    apiToken: types.string,
+  };
+
+  static defaultProps = {
+    apiToken: null,
   };
 
   constructor(props) {
@@ -63,9 +68,9 @@ export default class RetroWebsocket extends React.Component {
 
   render() {
     const {cable} = this.state;
-    const {retro_id} = this.props;
+    const {retroId, apiToken} = this.props;
     if (cable) {
-      return <RetroCable cable={cable} retro_id={retro_id}/>;
+      return <RetroCable cable={cable} retroId={retroId} apiToken={apiToken}/>;
     }
     return null;
   }

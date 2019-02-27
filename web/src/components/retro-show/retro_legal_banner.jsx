@@ -31,21 +31,8 @@
 
 import React from 'react';
 import types from 'prop-types';
+import {Actions} from 'p-flux';
 import LegalBanner from '../shared/legal_banner';
-
-function getDismissedIds() {
-  return JSON.parse(window.localStorage.retroBannersDismissed || '[]');
-}
-
-function markAsDismissed(retroId) {
-  const retroBannersDismissed = getDismissedIds();
-  retroBannersDismissed.push(retroId);
-  window.localStorage.retroBannersDismissed = JSON.stringify(retroBannersDismissed);
-}
-
-function hasBeenDismissed(retroId) {
-  return getDismissedIds().includes(retroId);
-}
 
 export default class RetroLegalBanner extends React.PureComponent {
   static propTypes = {
@@ -55,30 +42,26 @@ export default class RetroLegalBanner extends React.PureComponent {
       terms: types.string.isRequired,
       privacy: types.string.isRequired,
     }).isRequired,
+    localStorage: types.shape({
+      retroTermsDismissed: types.arrayOf(types.string),
+    }).isRequired,
   };
 
   static defaultProps = {
     isPrivate: false,
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      hasBeenDismissed: hasBeenDismissed(props.retroId),
-    };
-  }
-
   onDismiss = () => {
-    markAsDismissed(this.props.retroId);
+    const {retroId} = this.props;
 
-    this.setState({hasBeenDismissed: true});
+    Actions.setRetroTermsDismissed({slug: retroId});
   };
 
   render() {
-    const {config, isPrivate} = this.props;
+    const {config, localStorage, retroId, isPrivate} = this.props;
+    const {retroTermsDismissed = []} = localStorage;
 
-    if (this.state.hasBeenDismissed || isPrivate) {
+    if (isPrivate || retroTermsDismissed.includes(String(retroId))) {
       return null;
     }
 

@@ -29,22 +29,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {Dispatcher} from 'p-flux';
-import jestSpyOnAugmented from './jest_spy_augmented';
-import Application from '../Application';
+import React from 'react';
+import types from 'prop-types';
+import HomePage from './home/home_page';
+import ListRetrosPage from './retros-list/list_retros_page';
 
-jest.useFakeTimers();
+const FrontPage = (props) => (
+  props.localStorage.authToken ? (<ListRetrosPage {...props}/>) : (<HomePage {...props}/>)
+);
 
-beforeEach(() => {
-  global.Retro = {config: {api_base_url: 'https://example.com', enable_analytics: false}};
+FrontPage.propTypes = {
+  localStorage: types.shape({
+    authToken: types.string,
+  }).isRequired,
+};
 
-  Application.reset(); // set global state such as p-flux.Actions
-
-  jestSpyOnAugmented(Dispatcher, 'dispatch').mockReturnValue(null);
-});
-
-afterEach(() => {
-  jest.restoreAllMocks();
-  Dispatcher.reset();
-  jest.clearAllTimers();
-});
+export default FrontPage;

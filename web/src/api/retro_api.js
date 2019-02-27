@@ -36,18 +36,18 @@ export default {
     return global.Retro.config.api_base_url;
   },
 
-  createRetro(data) {
+  createRetro({name, slug, password, isPrivate, authToken}) {
     return fetchJson(`${this.apiBaseUrl()}/retros`, {
       method: 'POST',
       headers: {
-        'X-AUTH-TOKEN': localStorage.getItem('authToken'),
+        'X-AUTH-TOKEN': authToken,
       },
       body: JSON.stringify({
         retro: {
-          name: data.name,
-          slug: data.slug,
-          password: data.password,
-          is_private: data.isPrivate,
+          name,
+          slug,
+          password,
+          is_private: isPrivate,
         },
       }),
     });
@@ -73,11 +73,11 @@ export default {
     return fetchJson(`${this.apiBaseUrl()}/retros/${id}`, {accessToken: token});
   },
 
-  getRetros() {
+  getRetros({authToken}) {
     return fetchJson(`${this.apiBaseUrl()}/retros`, {
       method: 'GET',
       headers: {
-        'X-AUTH-TOKEN': localStorage.getItem('authToken'),
+        'X-AUTH-TOKEN': authToken,
       },
     });
   },

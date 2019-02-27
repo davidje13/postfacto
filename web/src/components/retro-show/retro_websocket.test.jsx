@@ -37,7 +37,7 @@ import RetroWebsocket from './retro_websocket';
 
 describe('RetroWebsocket', () => {
   it('creates a setup cable', () => {
-    const webSocketDOM = shallow(<RetroWebsocket url="wss://websocket/url" retro_id="retro-slug-123"/>);
+    const webSocketDOM = shallow(<RetroWebsocket url="wss://websocket/url" retroId="retro-slug-123" apiToken="token"/>);
     const {cable} = webSocketDOM.state();
     expect(cable.url).toEqual('wss://websocket/url');
   });

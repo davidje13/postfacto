@@ -40,7 +40,7 @@ const config = {contact: '', terms: '', privacy: ''};
 
 describe('HomePage', () => {
   it('dispatches showHomePageAnalytics when mounted', () => {
-    shallow(<HomePage config={config}/>);
+    shallow(<HomePage config={config} localStorage={{}}/>);
     expect(Dispatcher).toHaveReceived('showHomePageAnalytics');
   });
 });

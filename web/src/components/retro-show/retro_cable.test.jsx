@@ -42,7 +42,7 @@ describe('RetroCable', () => {
 
   beforeEach(() => {
     const cable = ActionCable.createConsumer('wss://websocket/url');
-    retroCableDOM = mount(<RetroCable cable={cable} retro_id="retro-slug-123"/>);
+    retroCableDOM = mount(<RetroCable cable={cable} retroId="retro-slug-123" apiToken="token"/>);
   });
 
   it('subscribes to the channels', () => {

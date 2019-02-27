@@ -45,12 +45,6 @@ export default {
   setRoute({data}) {
     this.router.navigate(data);
   },
-  requireRetroLogin({data}) {
-    this.dispatch({type: 'setRoute', data: `/retros/${data.retro_id}/login`});
-  },
-  requireRetroRelogin({data}) {
-    this.dispatch({type: 'setRoute', data: `/retros/${data.retro.slug}/relogin`});
-  },
   retroSuccessfullyCreated({data}) {
     this.$store.refine('errors').set({});
     this.dispatch({type: 'setRoute', data: `/retros/${data.retro.slug}`});
@@ -162,7 +156,7 @@ export default {
     if (data.command === 'force_relogin') {
       const session = this.$store.get('session');
       if (session.request_uuid !== data.payload.originator_id) {
-        this.dispatch({type: 'requireRetroRelogin', data: {retro: data.payload.retro}});
+        this.dispatch({type: 'markRetroLoginNeeded', data: {slug: data.payload.retro.slug, changed: true}});
       }
     } else {
       this.$store.merge({retro: data.retro});
@@ -237,7 +231,6 @@ export default {
     this.$store.merge({dialog: null});
   },
   loggedInSuccessfully({data}) {
-    localStorage.setItem('authToken', data.auth_token);
     if (data.new_user) {
       this.dispatch({type: 'setRoute', data: '/retros/new'});
     } else {
@@ -245,7 +238,7 @@ export default {
     }
   },
   signOut() {
-    window.localStorage.clear();
+    this.dispatch({type: 'clearLocalStorage'});
     this.dispatch({type: 'setRoute', data: '/'});
   },
   retroSettingsSuccessfullyUpdated({data: {retro}}) {
@@ -262,9 +255,9 @@ export default {
   backPressedFromPasswordSettings({data}) {
     this.dispatch({type: 'setRoute', data: `/retros/${data.retro_id}/settings`});
   },
-  retroPasswordSuccessfullyUpdated({data}) {
+  retroPasswordSuccessfullyUpdated({data: {retro_id, token}}) {
     this.$store.refine('errors').set({});
-    window.localStorage.setItem(`apiToken-${data.retro_id}`, data.token);
+    this.dispatch({type: 'setApiToken', data: {slug: retro_id, apiToken: token}});
   },
   retroPasswordUnsuccessfullyUpdated({data}) {
     this.$store.refine('errors').set(data.errors);
@@ -296,6 +289,7 @@ export default {
     this.$store.refine('featureFlags').merge({
       archiveEmails: data.archive_emails,
     });
+    this.$store.refine('hasConfig').set(true);
   },
   setCountryCode({data}) {
     this.$store.merge({

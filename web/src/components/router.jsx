@@ -33,17 +33,15 @@ import React from 'react';
 import {Actions} from 'p-flux';
 import types from 'prop-types';
 import RetroCreatePage from './retro-create/retro_create_page';
-import ListRetrosPage from './retros-list/list_retros_page';
 import ShowRetroPage from './retro-show/show_retro_page';
 import ShowRetroSettingsPage from './retro-settings/show_retro_settings_page';
 import ShowRetroPasswordSettingsPage from './retro-settings/show_retro_password_settings_page';
-import LoginToRetroPage from './retro-login/login_to_retro_page';
 import ApiServerNotFoundPage from './server-lost/api_server_not_found_page';
 import RetroNotFoundPage from './retro-not-found/retro_not_found_page';
 import NotFoundPage from './not-found/not_found_page';
 import NewTermsPage from './terms/new_terms_page';
 import EmptyPage from './shared/empty_page';
-import HomePage from './home/home_page';
+import FrontPage from './front_page';
 import ListRetroArchivesPage from './retro-archives/list_retro_archives_page';
 import Alert from './shared/alert';
 import RegistrationPage from './registration/registration_page';
@@ -84,8 +82,6 @@ export class Router extends React.Component {
     router.get('/retros/:retroId', this.showRetro);
     router.get('/retros/:retroId/archives', this.listRetroArchives);
     router.get('/retros/:retroId/archives/:archiveId', this.showRetroArchive);
-    router.get('/retros/:retroId/login', this.loginToRetro);
-    router.get('/retros/:retroId/relogin', this.reloginToRetro);
     router.get('/retros/:retroId/settings', this.showRetroSettings);
     router.get('/retros/:retroId/settings/password', this.showRetroPasswordSettings);
     router.get('/terms', this.showTerms);
@@ -126,10 +122,6 @@ export class Router extends React.Component {
     this.setPage(ShowRetroPage, {retroId, archives: false});
   };
 
-  listRetros = () => {
-    this.setPage(ListRetrosPage);
-  };
-
   listRetroArchives = (req) => {
     const {retroId} = req.params;
     Actions.retroIdRouted(retroId);
@@ -162,22 +154,8 @@ export class Router extends React.Component {
     this.setPage(NewTermsPage);
   };
 
-  loginToRetro = (req) => {
-    const {retroId} = req.params;
-    this.setPage(LoginToRetroPage, {retroId});
-  };
-
-  reloginToRetro = (req) => {
-    const {retroId} = req.params;
-    this.setPage(LoginToRetroPage, {retroId, force_relogin: true});
-  };
-
   showHome = () => {
-    if (this.isUserLoggedIn()) {
-      this.listRetros();
-    } else {
-      this.setPage(HomePage);
-    }
+    this.setPage(FrontPage);
   };
 
   showRegistration = (req) => {
@@ -195,10 +173,6 @@ export class Router extends React.Component {
         <Page {...this.props} {...additionalProps}/>
       </div>
     );
-  }
-
-  isUserLoggedIn() {
-    return localStorage.getItem('authToken');
   }
 }
 

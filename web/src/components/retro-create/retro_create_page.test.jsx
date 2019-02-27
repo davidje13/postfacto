@@ -48,10 +48,13 @@ describe('RetroCreatePage', () => {
   let fieldRetroPassword;
 
   beforeEach(() => {
-    localStorage.setItem('authToken', 'some-token');
+    const localStorage = {
+      authToken: 'some-token',
+    };
+
     dom = mount((
       <MuiThemeProvider>
-        <RetroCreatePage/>
+        <RetroCreatePage localStorage={localStorage}/>
       </MuiThemeProvider>
     ));
 
@@ -230,8 +233,10 @@ describe('RetroCreatePage', () => {
   });
 
   it('redirects to home page when not logged in', () => {
-    localStorage.setItem('authToken', '');
-    shallow(<RetroCreatePage/>);
+    const localStorage = {
+      authToken: null,
+    };
+    shallow(<RetroCreatePage localStorage={localStorage}/>);
 
     expect(Dispatcher).toHaveReceived({type: 'setRoute', data: '/'});
   });

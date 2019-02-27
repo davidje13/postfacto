@@ -55,7 +55,17 @@ describe('ListRetroArchivesPage', () => {
   let dom;
 
   beforeEach(() => {
-    dom = mount(<MuiThemeProvider><ListRetroArchivesPage retroId="789" archives={archives} config={config} environment={environment}/></MuiThemeProvider>);
+    dom = mount((
+      <MuiThemeProvider>
+        <ListRetroArchivesPage
+          retroId="789"
+          archives={archives}
+          config={config}
+          environment={environment}
+          localStorage={{hasAnyData: false}}
+        />
+      </MuiThemeProvider>
+    ));
   });
 
   it('shows all archived retros', () => {
@@ -90,8 +100,15 @@ describe('ListRetroArchivesPage', () => {
   });
 
   it('shows a sign out menu item if logged in', () => {
-    window.localStorage.setItem('authToken', 'some-token');
-    dom = shallow(<ListRetroArchivesPage retroId="789" archives={archives} config={config} environment={environment}/>);
+    dom = shallow((
+      <ListRetroArchivesPage
+        retroId="789"
+        archives={archives}
+        config={config}
+        environment={environment}
+        localStorage={{hasAnyData: true}}
+      />
+    ));
 
     expect(getMenuLabels(dom)).toEqual(['Sign out']);
   });

@@ -71,6 +71,9 @@ export default class ShowRetroSettingsPage extends React.Component {
     environment: types.shape({
       isMobile640: types.bool,
     }).isRequired,
+    localStorage: types.shape({
+      hasAnyData: types.bool.isRequired,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -252,7 +255,7 @@ export default class ShowRetroSettingsPage extends React.Component {
 
   getMenuItems() {
     const items = [
-      {title: 'Sign out', callback: Actions.signOut, isApplicable: window.localStorage.length > 0},
+      {title: 'Sign out', callback: Actions.signOut, isApplicable: this.props.localStorage.hasAnyData},
     ];
 
     return items.filter((item) => item.isApplicable);

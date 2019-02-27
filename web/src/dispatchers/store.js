@@ -47,10 +47,19 @@ export default {
   featureFlags: {
     archiveEmails: false,
   },
+  hasLoadedConfig: false,
   countryCode: 'GB',
   environment: {
     isMobile640: false,
     isMobile1030: false,
     isMobile1084: false,
+  },
+  localStorage: {
+    hasAnyData: false,
+    authToken: null,
+    apiTokens: {},
+    loginsNeeded: {},
+    homeTermsDismissed: false,
+    retroTermsDismissed: [],
   },
 };

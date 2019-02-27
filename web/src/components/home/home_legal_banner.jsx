@@ -31,37 +31,25 @@
 
 import React from 'react';
 import types from 'prop-types';
+import {Actions} from 'p-flux';
 import LegalBanner from '../shared/legal_banner';
 
-export default class HomeLegalBanner extends React.PureComponent {
-  static propTypes = {
-    config: types.shape({
-      terms: types.string.isRequired,
-      privacy: types.string.isRequired,
-    }).isRequired,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      hasBeenDismissed: window.localStorage.homeTermsDismissed,
-    };
-  }
-
-  onDismiss = () => {
-    window.localStorage.homeTermsDismissed = true;
-
-    this.setState({hasBeenDismissed: true});
-  };
-
-  render() {
-    const {config} = this.props;
-
-    if (this.state.hasBeenDismissed) {
-      return null;
-    }
-
-    return (<LegalBanner config={config} onDismiss={this.onDismiss}/>);
-  }
+function onDismiss() {
+  Actions.setHomeTermsDismissed();
 }
+
+const HomeLegalBanner = ({config, localStorage}) => (
+  localStorage.homeTermsDismissed ? null : (<LegalBanner config={config} onDismiss={onDismiss}/>)
+);
+
+HomeLegalBanner.propTypes = {
+  config: types.shape({
+    terms: types.string.isRequired,
+    privacy: types.string.isRequired,
+  }).isRequired,
+  localStorage: types.shape({
+    homeTermsDismissed: types.bool,
+  }).isRequired,
+};
+
+export default HomeLegalBanner;

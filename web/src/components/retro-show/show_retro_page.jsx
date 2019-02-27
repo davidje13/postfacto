@@ -43,6 +43,7 @@ import RetroWebsocket from './retro_websocket';
 import RetroFooter from '../shared/footer';
 import RetroLegalBanner from './retro_legal_banner';
 import RetroHeading from './retro_heading';
+import LoginToRetroPage from '../retro-login/login_to_retro_page';
 
 import EmptyPage from '../shared/empty_page';
 
@@ -70,6 +71,10 @@ export default class ShowRetroPage extends React.Component {
     }),
     environment: types.shape({
       isMobile640: types.bool,
+    }).isRequired,
+    localStorage: types.shape({
+      apiTokens: types.object.isRequired,
+      loginsNeeded: types.object.isRequired,
     }).isRequired,
   };
 
@@ -260,17 +265,18 @@ export default class ShowRetroPage extends React.Component {
   }
 
   renderMobile(retro) {
-    const {config, retroId, archives} = this.props;
+    const {config, retroId, archives, localStorage} = this.props;
+    const apiToken = localStorage.apiTokens[String(retroId)];
 
     return (
       <span>
-        <RetroWebsocket url={config.websocket_url} retro_id={retroId}/>
+        <RetroWebsocket url={config.websocket_url} retroId={retroId} apiToken={apiToken}/>
         {this.renderArchiveConfirmationDialog()}
         <div className={archives ? 'mobile-display archived' : 'mobile-display'}>
 
-          <RetroLegalBanner retroId={retroId} isPrivate={retro.is_private} config={config}/>
+          <RetroLegalBanner retroId={retroId} isPrivate={retro.is_private} config={config} localStorage={localStorage}/>
 
-          <RetroHeading retro={retro} retroId={retroId} isMobile archives={archives}/>
+          <RetroHeading retro={retro} retroId={retroId} isMobile archives={archives} localStorage={localStorage}/>
 
           <div className="mobile-tabs">
             <div className="mobile-tabs-list">
@@ -308,7 +314,8 @@ export default class ShowRetroPage extends React.Component {
   }
 
   renderDesktop(retro) {
-    const {config, retroId, archives} = this.props;
+    const {config, retroId, archives, localStorage} = this.props;
+    const apiToken = localStorage.apiTokens[String(retroId)];
 
     let retroContainerClasses = 'full-height full-height-retro';
 
@@ -327,11 +334,11 @@ export default class ShowRetroPage extends React.Component {
     return (
       <HotKeys keyMap={keyMap} handlers={keyHandlers}>
         <span>
-          <RetroWebsocket url={config.websocket_url} retro_id={retroId}/>
+          <RetroWebsocket url={config.websocket_url} retroId={retroId} apiToken={apiToken}/>
           {this.renderArchiveConfirmationDialog()}
           <div className={retroContainerClasses}>
 
-            <RetroLegalBanner retroId={retroId} isPrivate={retro.is_private} config={config}/>
+            <RetroLegalBanner retroId={retroId} isPrivate={retro.is_private} config={config} localStorage={localStorage}/>
 
             <RetroHeading
               retro={retro}
@@ -339,6 +346,7 @@ export default class ShowRetroPage extends React.Component {
               isMobile={false}
               archives={archives}
               showVideoButton={!archives}
+              localStorage={localStorage}
             />
             <div className="retro-item-list">
               <RetroColumn
@@ -377,8 +385,19 @@ export default class ShowRetroPage extends React.Component {
   }
 
   render() {
-    const {retro, archives, environment} = this.props;
+    const {retro, retroId, archives, environment, localStorage} = this.props;
     const {filtered_retro_archive} = this.state;
+
+    const loginStatus = localStorage.loginsNeeded[String(retroId)];
+    if (loginStatus) {
+      return (
+        <LoginToRetroPage
+          force_relogin={loginStatus.changed}
+          {...this.props}
+        />
+      );
+    }
+
     const retro_object = archives ? filtered_retro_archive : retro;
     if (!(retro_object && retro_object.id)) {
       return (<EmptyPage/>);

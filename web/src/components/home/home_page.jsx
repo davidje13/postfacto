@@ -40,6 +40,7 @@ import HomeLegalBanner from './home_legal_banner';
 export default class HomePage extends React.PureComponent {
   static propTypes = {
     config: types.object.isRequired,
+    localStorage: types.object.isRequired,
   };
 
   componentDidMount() {
@@ -60,13 +61,13 @@ export default class HomePage extends React.PureComponent {
   }
 
   render() {
-    const {config} = this.props;
+    const {config, localStorage} = this.props;
 
     return (
       <div className="home-page">
         <div className="sticky-header">
           <div className="row">
-            <HomeLegalBanner config={config}/>
+            <HomeLegalBanner config={config} localStorage={localStorage}/>
           </div>
           <div className="row header-title">
             <div className="show-for-medium small-12 columns">

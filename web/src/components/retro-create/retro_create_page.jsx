@@ -42,6 +42,9 @@ export default class RetroCreatePage extends React.Component {
     errors: types.shape({
       slug: types.string,
     }),
+    localStorage: types.shape({
+      authToken: types.string,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -70,7 +73,9 @@ export default class RetroCreatePage extends React.Component {
   }
 
   componentWillMount() {
-    if (!localStorage.getItem('authToken')) {
+    const {localStorage} = this.props;
+
+    if (!localStorage.authToken) {
       Actions.setRoute('/');
     }
   }
