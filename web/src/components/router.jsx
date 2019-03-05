@@ -56,6 +56,9 @@ export class Router extends React.Component {
     config: types.object,
     alert: types.object,
     featureFlags: types.object,
+    api_server_not_found: types.bool,
+    retro_not_found: types.bool,
+    not_found: types.bool,
   };
 
   static defaultProps = {
@@ -63,6 +66,9 @@ export class Router extends React.Component {
     config: null,
     alert: null,
     featureFlags: {},
+    api_server_not_found: false,
+    retro_not_found: false,
+    not_found: false,
   };
 
   constructor(props) {
