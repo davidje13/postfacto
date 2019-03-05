@@ -46,7 +46,7 @@ export default class ApiServerNotFoundPage extends React.PureComponent {
             <div className="image">
               <img src={faceDeadSvg} alt="Error"/>
             </div>
-            <h1>Oh no! It's broken</h1>
+            <h1>Oh no! It&apos;s broken</h1>
             <p>Try refreshing the page, or come back later.</p>
           </div>
         </div>

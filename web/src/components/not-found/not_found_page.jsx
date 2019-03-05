@@ -46,7 +46,7 @@ export default class NotFoundPage extends React.PureComponent {
       <div className="error-page">
         <div className="row" style={{marginTop: '180px'}}>
           <div className="small-centered medium-8 small-10 columns">
-            <h1>Oops... Looks like the page you're looking for doesn't exist.</h1>
+            <h1>Oops... Looks like the page you&apos;re looking for doesn&apos;t exist.</h1>
             <p>Perhaps you were trying to do this?</p>
             <div className="row">
               <button

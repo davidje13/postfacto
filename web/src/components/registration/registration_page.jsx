@@ -124,7 +124,7 @@ export default class RegistrationPage extends React.Component {
 
             <div className="row terms-text">
               <p>
-                By continuing, you agree to Postfacto's
+                By continuing, you agree to Postfacto&apos;s
                 {' '}<a href="/terms" target="_blank">Terms of Use</a> and
                 {' '}<a href="/privacy" target="_blank">Privacy Policy</a>
               </p>

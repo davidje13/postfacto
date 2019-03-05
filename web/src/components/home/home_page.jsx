@@ -98,7 +98,7 @@ export default class HomePage extends React.PureComponent {
           </div>
           <div className="row">
             <div className="text-center whats-a-retro-link">
-              <a href="https://builttoadapt.io/how-to-run-a-really-good-retrospective-8982bd839e16" target="_blank">What's a retro?</a>
+              <a href="https://builttoadapt.io/how-to-run-a-really-good-retrospective-8982bd839e16" target="_blank">What&apos;s a retro?</a>
             </div>
           </div>
         </div>

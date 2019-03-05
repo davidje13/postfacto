@@ -213,7 +213,7 @@ export default class RetroCreatePage extends React.Component {
 
             <div className="medium-centered small-centered" style={{width: '30rem'}}>
               <div className="row">
-                <label className="label">What's your team called?</label>
+                <label className="label">What&apos;s your team called?</label>
                 <input
                   id="retro_name"
                   value={name}

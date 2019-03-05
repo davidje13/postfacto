@@ -47,8 +47,8 @@ export default class RetroNotFoundPage extends React.Component {
         <div className="row" style={{marginTop: '180px'}}>
           <div className="small-centered medium-8 small-10 columns">
             <h1>Project not found.</h1>
-            <p>Unfortunately, we couldn't find that project. If you've created a project already, double-check your URL.</p>
-            <p>If you haven't created a project, why don't you create one?</p>
+            <p>Unfortunately, we couldn&apos;t find that project. If you&apos;ve created a project already, double-check your URL.</p>
+            <p>If you haven&apos;t created a project, why don&apos;t you create one?</p>
             <div className="row">
               <button
                 className="retro-form-submit expanded button"
