@@ -38,6 +38,10 @@ export default class RegistrationPage extends React.Component {
     accessToken: types.string.isRequired,
     email: types.string.isRequired,
     fullName: types.string.isRequired,
+    config: types.shape({
+      terms: types.string.isRequired,
+      privacy: types.string.isRequired,
+    }).isRequired,
   };
 
   constructor(props) {
@@ -69,7 +73,7 @@ export default class RegistrationPage extends React.Component {
   };
 
   render() {
-    const {email} = this.props;
+    const {email, config} = this.props;
     const {fullName, companyName} = this.state;
 
     return (
@@ -125,8 +129,8 @@ export default class RegistrationPage extends React.Component {
             <div className="row terms-text">
               <p>
                 By continuing, you agree to Postfacto&apos;s
-                {' '}<a href="/terms" target="_blank">Terms of Use</a> and
-                {' '}<a href="/privacy" target="_blank">Privacy Policy</a>
+                {' '}<a href={config.terms} target="_blank">Terms of Use</a> and
+                {' '}<a href={config.privacy} target="_blank">Privacy Policy</a>
               </p>
             </div>
 

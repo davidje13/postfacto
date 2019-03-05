@@ -60,8 +60,8 @@ context 'Felicity', type: :feature, js: true, if: ENV['USE_MOCK_GOOGLE'] == 'tru
         fill_in 'Company Name', with: 'my company name'
 
         expect(page).to have_content('By continuing, you agree to Postfacto\'s Terms of Use and Privacy Policy')
-        expect(page).to have_link('Terms of Use', href: '/terms')
-        expect(page).to have_link('Privacy Policy', href: '/privacy')
+        expect(page).to have_link('Terms of Use', href: 'https://loripsum.net/api')
+        expect(page).to have_link('Privacy Policy', href: 'https://baconipsum.com/api/?type=all-meat&paras=1&start-with-lorem=1&format=html')
 
 
         click_on 'Next: Make a retro'
